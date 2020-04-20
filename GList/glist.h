@@ -15,12 +15,16 @@ typedef int (*Compara) (void* dato1 ,void* dato2);
 
 typedef void (*Destruir) (void* dato);
 
-GList gList_crear();
+typedef void (*FuncionVisitante) (void* dato);
 
-void gList_destruir(GList lista, Destruir function);
+GList glist_crear();
 
-GList gList_insertar_inicio(GList lista, void* dato);
+void glist_destruir(GList lista, Destruir function);
 
-GList gList_insertar_final(GList lista, void* dato);
+GList glist_insertar_inicio(GList lista, void* dato);
+
+GList glist_insertar_final(GList lista, void* dato);
+
+void glist_recorrer(GList lista, FuncionVisitante function);
 
 #endif /* __GLIST_H__ */
