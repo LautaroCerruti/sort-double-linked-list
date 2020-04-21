@@ -27,4 +27,14 @@ GList glist_insertar_final(GList lista, void* dato);
 
 void glist_recorrer(GList lista, FuncionVisitante function);
 
+int glist_longitud(GList lista);
+
+void glist_insertar(GList* lista, int pos, void* dato);
+
+void glist_eliminar(GList* lista, int pos, Destruir function);
+
+void glist_swap(GNodo** nodo1, GNodo** nodo2);
+
+GList selection_sort(GList lista, Compara function);
+
 #endif /* __GLIST_H__ */
