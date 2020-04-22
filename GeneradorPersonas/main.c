@@ -104,8 +104,9 @@ int main(int argc, char *argv[]) {
     salida = fopen(argv[4], "w");
     creacion_de_personas(cantidadAGenerar, nombres, locaciones, 
       cantidadNombresDisponible, cantidadLocacionesDisponibles, salida);
-    
-    for(iterador = 1; iterador <= cantidadLocacionesDisponibles; ++iterador){
+    fclose(nombres);
+    fclose(salida);
+    for(iterador = 0; iterador < cantidadLocacionesDisponibles; ++iterador){
       free(locaciones[iterador]);
     }
     free(locaciones);
