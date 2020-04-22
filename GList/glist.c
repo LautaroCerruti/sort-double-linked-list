@@ -19,38 +19,57 @@ void glist_destruir(GList lista, Destruir function) {
   free(lista);
 }
 
+GNodo* glist_pop(GList* lista, int pos) {
+  GNodo* nodo = glist_crear();
+  if (lista) {
+    if ((*lista)->sig == *lista) {
+      nodo = *lista;
+      lista = NULL;
+    } else {
+      nodo = *lista;
+      for (; nodo->sig != (*lista) && pos != 0; nodo = nodo->sig, --pos);
+      if (pos == 0) {
+        *lista = nodo->sig;
+        nodo->ant->sig = nodo->sig;
+        nodo->sig->ant = nodo->ant;
+        nodo->sig = nodo;
+        nodo->ant = nodo;
+      }
+    }
+  }
+  return nodo;
+}
+
+GList glist_concat(GList lista1, GList lista2) {
+  if (!lista1)
+    return lista2;
+  if (!lista2)
+    return lista1;
+  lista1->ant->sig = lista2;
+  lista2->ant->sig = lista1;
+  lista1->ant = lista2->ant;
+  GList temp = lista1->ant;
+  lista1->ant = lista2->ant;
+  lista2->ant = temp;
+  return lista1;
+}
+
 GList glist_insertar_inicio(GList lista, void* dato) {
   GNodo* nodo = malloc(sizeof(GNodo));
   nodo->dato = dato;
+  nodo->sig = nodo;
+  nodo->ant = nodo;
 
-  if (!lista) {
-    nodo->ant = nodo;
-    nodo->sig = nodo;
-  } else {
-    nodo->sig = lista;
-    lista->ant->sig = nodo;
-    nodo->ant = lista->ant;
-    lista->ant = nodo;
-  }
-
-  return nodo;
+  return glist_concat(nodo, lista);
 }
 
 GList glist_insertar_final(GList lista, void* dato) {
   GNodo* nodo = malloc(sizeof(GNodo));
   nodo->dato = dato;
+  nodo->ant = nodo;
+  nodo->sig = nodo;
 
-  if (!lista) {
-    nodo->ant = nodo;
-    nodo->sig = nodo;
-    lista = nodo;
-  } else {
-    nodo->sig = lista;
-    lista->ant->sig = nodo;
-    nodo->ant = lista->ant;
-    lista->ant = nodo;
-  }
-  return lista;
+  return glist_concat(lista, nodo);
 }
 
 void glist_recorrer(GList lista, FuncionVisitante function) {
@@ -97,26 +116,10 @@ void glist_insertar(GList* lista, int pos, void* dato) {
 }
 
 void glist_eliminar(GList* lista, int pos, Destruir function) {
-  GNodo* nodoAux = (*lista)->sig;
-  if (pos == 0 && *lista) {
-    (*lista)->ant->sig = (*lista)->sig;
-    (*lista)->sig->ant = (*lista)->ant;
-    function((*lista)->dato);
-    free((*lista));
-    (*lista) = nodoAux;
-  } else {
-    if (nodoAux) {
-    for (int i = 0; nodoAux != (*lista); nodoAux = nodoAux->sig) {
-      if (i == pos) {
-        GNodo* nodo = nodoAux->sig;
-        nodoAux->ant->sig = nodoAux->sig;
-        nodoAux->sig->ant = nodoAux->ant;
-        function(nodoAux->dato);
-        free(nodoAux);
-        nodoAux = nodo;
-      }
-    }
-    }
+  GNodo* nodo = glist_pop(lista, pos);
+  if (nodo) {
+    function(nodo->dato);
+    free(nodo);
   }
 }
 
@@ -169,41 +172,6 @@ GList glist_insertion_sort(GList lista, Compara function) {
     }
   }
   return lista;
-}
-
-GNodo* glist_pop(GList* lista, int pos) {
-  GNodo* nodo = glist_crear();
-  if (lista) {
-    if ((*lista)->sig == *lista) {
-      nodo = *lista;
-      lista = NULL;
-    } else {
-      nodo = *lista;
-      for (; nodo->sig != (*lista) && pos != 0; nodo = nodo->sig, --pos);
-      if (pos == 0) {
-        *lista = nodo->sig;
-        nodo->ant->sig = nodo->sig;
-        nodo->sig->ant = nodo->ant;
-        nodo->sig = nodo;
-        nodo->ant = nodo;
-      }
-    }
-  }
-  return nodo;
-}
-
-GList glist_concat(GList lista1, GList lista2) {
-  if (!lista1)
-    return lista2;
-  if (!lista2)
-    return lista1;
-  lista1->ant->sig = lista2;
-  lista2->ant->sig = lista1;
-  lista1->ant = lista2->ant;
-  GList temp = lista1->ant;
-  lista1->ant = lista2->ant;
-  lista2->ant = temp;
-  return lista1;
 }
 
 GList glist_merge(GList lista1, GList lista2, Compara function) {

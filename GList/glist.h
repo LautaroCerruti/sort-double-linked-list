@@ -21,6 +21,10 @@ GList glist_crear();
 
 void glist_destruir(GList lista, Destruir function);
 
+GNodo* glist_pop(GList* lista, int pos);
+
+GList glist_concat(GList lista1, GList lista2);
+
 GList glist_insertar_inicio(GList lista, void* dato);
 
 GList glist_insertar_final(GList lista, void* dato);
@@ -38,10 +42,6 @@ void glist_swap(GNodo** nodo1, GNodo** nodo2);
 GList glist_selection_sort(GList lista, Compara function);
 
 GList glist_insertion_sort(GList lista, Compara function);
-
-GNodo* glist_pop(GList* lista, int pos);
-
-GList glist_concat(GList lista1, GList lista2);
 
 GList glist_merge(GList lista1, GList lista2, Compara function);
 
