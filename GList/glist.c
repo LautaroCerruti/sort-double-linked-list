@@ -72,6 +72,14 @@ GList glist_insertar_final(GList lista, void* dato) {
   return glist_concat(lista, nodo);
 }
 
+GList glist_list_deep_copy(GList lista) {
+  GList newList = glist_crear();
+  GNodo* node = lista->ant;
+  for (;node->ant != lista->ant; node = node->ant)
+    newList = glist_insertar_inicio(newList, node->dato);
+  newList = glist_insertar_inicio(newList, node->dato);
+}
+
 void glist_recorrer(GList lista, FuncionVisitante function) {
   if (lista) {
     function(lista->dato);
@@ -88,7 +96,8 @@ int glist_longitud(GList lista) {
   if (lista) {
     longitud = 1;
     GNodo* nodoAux = lista->sig;
-    for (; nodoAux != lista; nodoAux = nodoAux->sig, longitud++);
+    for (; nodoAux != lista; nodoAux = nodoAux->sig,
+      longitud++);
   }
   return longitud;
 }

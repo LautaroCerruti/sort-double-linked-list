@@ -27,6 +27,8 @@ GList glist_concat(GList lista1, GList lista2);
 
 GList glist_insertar_inicio(GList lista, void* dato);
 
+GList glist_list_deep_copy(GList lista);
+
 GList glist_insertar_final(GList lista, void* dato);
 
 void glist_recorrer(GList lista, FuncionVisitante function);
