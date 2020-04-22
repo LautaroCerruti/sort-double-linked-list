@@ -35,6 +35,14 @@ void glist_eliminar(GList* lista, int pos, Destruir function);
 
 void glist_swap(GNodo** nodo1, GNodo** nodo2);
 
-GList selection_sort(GList lista, Compara function);
+GList glist_selection_sort(GList lista, Compara function);
+
+GList glist_insertion_sort(GList lista, Compara function);
+
+GList glist_merge(GList lista1, GList lista2, Compara function);
+
+GList glist_split(GList lista);
+
+GList glist_merge_sort(GList lista, Compara function);
 
 #endif /* __GLIST_H__ */
