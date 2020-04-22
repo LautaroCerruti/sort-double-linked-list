@@ -39,6 +39,10 @@ GList glist_selection_sort(GList lista, Compara function);
 
 GList glist_insertion_sort(GList lista, Compara function);
 
+GNodo* glist_pop(GList* lista, int pos);
+
+GList glist_concat(GList lista1, GList lista2);
+
 GList glist_merge(GList lista1, GList lista2, Compara function);
 
 GList glist_split(GList lista);

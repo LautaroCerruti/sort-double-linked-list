@@ -46,6 +46,10 @@ int main() {
     printf("\n");
     lista = glist_merge_sort(lista, menor_int);
     glist_recorrer(lista, imprimir_int);
+    GNodo* nodo = glist_pop(&lista, 0);
+    printf("\nnodo: %d\n", *((int *)nodo->dato));
+    glist_recorrer(lista, imprimir_int);
+    free(nodo);
     glist_destruir(lista, destruir_int);
     return 0;
 }

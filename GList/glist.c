@@ -23,7 +23,7 @@ GList glist_insertar_inicio(GList lista, void* dato) {
   GNodo* nodo = malloc(sizeof(GNodo));
   nodo->dato = dato;
 
-  if (lista == NULL) {
+  if (!lista) {
     nodo->ant = nodo;
     nodo->sig = nodo;
   } else {
@@ -40,7 +40,7 @@ GList glist_insertar_final(GList lista, void* dato) {
   GNodo* nodo = malloc(sizeof(GNodo));
   nodo->dato = dato;
 
-  if (lista == NULL) {
+  if (!lista) {
     nodo->ant = nodo;
     nodo->sig = nodo;
     lista = nodo;
@@ -54,7 +54,7 @@ GList glist_insertar_final(GList lista, void* dato) {
 }
 
 void glist_recorrer(GList lista, FuncionVisitante function) {
-  if (lista != NULL) {
+  if (lista) {
     function(lista->dato);
     GNodo* nodoAux = lista->sig;
     for (; nodoAux != lista; nodoAux = nodoAux->sig) {
@@ -66,7 +66,7 @@ void glist_recorrer(GList lista, FuncionVisitante function) {
 
 int glist_longitud(GList lista) {
   int longitud = 0;
-  if (lista != NULL) {
+  if (lista) {
     longitud = 1;
     GNodo* nodoAux = lista->sig;
     for (; nodoAux != lista; nodoAux = nodoAux->sig, longitud++);
@@ -78,12 +78,12 @@ void glist_insertar(GList* lista, int pos, void* dato) {
   GNodo* nodo = malloc(sizeof(GNodo));
   nodo->dato = dato;
 
-  if (*lista == NULL && pos == 0) {
+  if (!(*lista) && pos == 0) {
     nodo->ant = nodo;
     nodo->sig = nodo;
     *lista = nodo;
   } else {
-    if (*lista != NULL) {
+    if (*lista) {
       GNodo* nodoAux = (*lista)->sig;
       for (int i = 1;
           nodoAux != *lista && i < pos;
@@ -98,14 +98,14 @@ void glist_insertar(GList* lista, int pos, void* dato) {
 
 void glist_eliminar(GList* lista, int pos, Destruir function) {
   GNodo* nodoAux = (*lista)->sig;
-  if (pos == 0 && *lista != NULL) {
+  if (pos == 0 && *lista) {
     (*lista)->ant->sig = (*lista)->sig;
     (*lista)->sig->ant = (*lista)->ant;
     function((*lista)->dato);
     free((*lista));
     (*lista) = nodoAux;
   } else {
-    if (nodoAux != NULL) {
+    if (nodoAux) {
     for (int i = 0; nodoAux != (*lista); nodoAux = nodoAux->sig) {
       if (i == pos) {
         GNodo* nodo = nodoAux->sig;
@@ -130,7 +130,7 @@ void glist_swap(GNodo** nodo1, GNodo** nodo2) {
 }
 
 GList glist_selection_sort(GList lista, Compara function) {
-  if (lista != NULL) {
+  if (lista) {
     GNodo* nodoAux = lista;
     for (; nodoAux != lista->ant; nodoAux = nodoAux->sig) {
       GNodo* nodoASwapear = nodoAux;
@@ -149,7 +149,7 @@ GList glist_selection_sort(GList lista, Compara function) {
 }
 
 GList glist_insertion_sort(GList lista, Compara function) {
-  if (lista != NULL) {
+  if (lista) {
     GNodo* nodoAux = lista->sig;
     for (; nodoAux != lista; ) {
       GNodo* nodo = nodoAux->ant;
@@ -171,15 +171,39 @@ GList glist_insertion_sort(GList lista, Compara function) {
   return lista;
 }
 
-GList glist_merge_sort(GList lista, Compara function) {
-  if (!lista || lista->sig == lista)
-    return lista;
-  GList lista2 = glist_split(lista);
+GNodo* glist_pop(GList* lista, int pos) {
+  GNodo* nodo = glist_crear();
+  if (lista) {
+    if ((*lista)->sig == *lista) {
+      nodo = *lista;
+      lista = NULL;
+    } else {
+      nodo = *lista;
+      for (; nodo->sig != (*lista) && pos != 0; nodo = nodo->sig, --pos);
+      if (pos == 0) {
+        *lista = nodo->sig;
+        nodo->ant->sig = nodo->sig;
+        nodo->sig->ant = nodo->ant;
+        nodo->sig = nodo;
+        nodo->ant = nodo;
+      }
+    }
+  }
+  return nodo;
+}
 
-  lista = glist_merge_sort(lista, function);
-  lista2 = glist_merge_sort(lista2, function);
-
-  return glist_merge(lista, lista2, function);
+GList glist_concat(GList lista1, GList lista2) {
+  if (!lista1)
+    return lista2;
+  if (!lista2)
+    return lista1;
+  lista1->ant->sig = lista2;
+  lista2->ant->sig = lista1;
+  lista1->ant = lista2->ant;
+  GList temp = lista1->ant;
+  lista1->ant = lista2->ant;
+  lista2->ant = temp;
+  return lista1;
 }
 
 GList glist_merge(GList lista1, GList lista2, Compara function) {
@@ -189,34 +213,20 @@ GList glist_merge(GList lista1, GList lista2, Compara function) {
     return lista1;
   if (function(lista1->dato, lista2->dato) == -1) {
     if (lista1 == lista1->sig) {
-      lista1->sig = lista2;
-      lista1->ant = lista2->ant;
-      lista2->ant->sig = lista1;
-      lista2->ant = lista1;
+      lista1 = glist_concat(lista1, lista2);
     } else {
-      GList listaAux = lista1->sig;
-      lista1->ant->sig = listaAux;
-      listaAux->ant = lista1->ant;
-      lista1->sig = glist_merge(listaAux, lista2, function);
-      lista1->ant = lista1->sig->ant;
-      lista1->sig->ant->sig = lista1;
-      lista1->sig->ant = lista1;
+      GNodo* nodoAux = glist_pop(&lista1, 0);
+      lista1 = glist_merge(lista1, lista2, function);
+      lista1 = glist_concat(nodoAux, lista1);
     }
     return lista1;
   } else {
     if (lista2 == lista2->sig) {
-      lista2->sig = lista1;
-      lista2->ant = lista1->ant;
-      lista1->ant->sig = lista2;
-      lista1->ant = lista2;
+      lista2 = glist_concat(lista2, lista1);
     } else {
-      GList listaAux = lista2->sig;
-      lista2->ant->sig = listaAux;
-      listaAux->ant = lista2->ant;
-      lista2->sig = glist_merge(lista1, listaAux, function);
-      lista2->ant = lista2->sig->ant;
-      lista2->sig->ant->sig = lista2;
-      lista2->sig->ant = lista2;
+      GNodo* nodoAux = glist_pop(&lista2, 0);
+      lista2 = glist_merge(lista1, lista2, function);
+      lista2 = glist_concat(nodoAux, lista2);
     }
     return lista2;
   }
@@ -233,4 +243,15 @@ GList glist_split(GList lista) {
   lista->ant = nodo2;
   nodo2->sig = lista;
   return listaNueva;
+}
+
+GList glist_merge_sort(GList lista, Compara function) {
+  if (!lista || lista->sig == lista)
+    return lista;
+  GList lista2 = glist_split(lista);
+
+  lista = glist_merge_sort(lista, function);
+  lista2 = glist_merge_sort(lista2, function);
+
+  return glist_merge(lista, lista2, function);
 }
