@@ -183,7 +183,6 @@ GList glist_merge_sort(GList lista, Compara function) {
 }
 
 GList glist_merge(GList lista1, GList lista2, Compara function) {
-  GList listaFinal = glist_crear();
   if (!lista1)
     return lista2;
   if (!lista2)
