@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     cantidadLocacionesDisponibles = contador_de_lineas(locacionesarchivo);
     locaciones = (char** ) malloc(sizeof(char*)*cantidadLocacionesDisponibles);
     for(iterador = 0; iterador < cantidadLocacionesDisponibles; ++iterador){
-      fscanf(locacionesarchivo,"%s", buffer);
+      fscanf(locacionesarchivo,"%[^\n]", buffer);
       fgetc(locacionesarchivo);
       locaciones[iterador] = (char*) malloc(sizeof(char)*(strlen(buffer)+1));
       strcpy(locaciones[iterador], buffer);

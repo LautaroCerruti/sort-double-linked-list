@@ -9,13 +9,22 @@ GList glist_crear() {
 void glist_destruir(GList lista, Destruir function) {
   GNodo* nodoAux;
   GNodo* anterior = lista->ant;
-  while (lista != anterior) {
+  for (; lista != anterior; lista = nodoAux) {
     nodoAux = lista->sig;
     function(lista->dato);
     free(lista);
-    lista = nodoAux;
   }
   function(lista->dato);
+  free(lista);
+}
+
+void glist_destroy_copy(GList lista) {
+  GNodo* nodoAux;
+  GNodo* anterior = lista->ant;
+  for (; lista != anterior; lista = nodoAux) {
+    nodoAux = lista->sig;
+    free(lista);
+  }
   free(lista);
 }
 
@@ -47,7 +56,6 @@ GList glist_concat(GList lista1, GList lista2) {
     return lista1;
   lista1->ant->sig = lista2;
   lista2->ant->sig = lista1;
-  lista1->ant = lista2->ant;
   GList temp = lista1->ant;
   lista1->ant = lista2->ant;
   lista2->ant = temp;
@@ -72,73 +80,30 @@ GList glist_insertar_final(GList lista, void* dato) {
   return glist_concat(lista, nodo);
 }
 
-GList glist_list_deep_copy(GList lista) {
+GList glist_copy(GList lista) {
   GList newList = glist_crear();
-  GNodo* node = lista->ant;
-  for (;node->ant != lista->ant; node = node->ant)
-    newList = glist_insertar_inicio(newList, node->dato);
-  newList = glist_insertar_inicio(newList, node->dato);
-}
-
-void glist_recorrer(GList lista, FuncionVisitante function) {
+  GNodo* node = lista;
   if (lista) {
-    function(lista->dato);
-    GNodo* nodoAux = lista->sig;
-    for (; nodoAux != lista; nodoAux = nodoAux->sig) {
-        function(nodoAux->dato);
-    }
+    for (;node->sig != lista; node = node->sig)
+      newList = glist_insertar_final(newList, node->dato);
+    newList = glist_insertar_final(newList, node->dato);
   }
+  return newList;
 }
 
-
-int glist_longitud(GList lista) {
-  int longitud = 0;
+void glist_imprimir_archivo(FILE* salida, GList lista, FuncionVisitante function) {
   if (lista) {
-    longitud = 1;
+    function(salida, lista->dato);
     GNodo* nodoAux = lista->sig;
-    for (; nodoAux != lista; nodoAux = nodoAux->sig,
-      longitud++);
-  }
-  return longitud;
-}
-
-void glist_insertar(GList* lista, int pos, void* dato) {
-  GNodo* nodo = malloc(sizeof(GNodo));
-  nodo->dato = dato;
-
-  if (!(*lista) && pos == 0) {
-    nodo->ant = nodo;
-    nodo->sig = nodo;
-    *lista = nodo;
-  } else {
-    if (*lista) {
-      GNodo* nodoAux = (*lista)->sig;
-      for (int i = 1;
-          nodoAux != *lista && i < pos;
-          ++i, nodoAux = nodoAux->sig);
-      nodoAux->sig->ant = nodo;
-      nodo->sig = nodoAux->sig;
-      nodoAux->sig = nodo;
-      nodo->ant = nodoAux;
-    }
+    for (; nodoAux != lista; nodoAux = nodoAux->sig)
+      function(salida, nodoAux->dato);
   }
 }
 
-void glist_eliminar(GList* lista, int pos, Destruir function) {
-  GNodo* nodo = glist_pop(lista, pos);
-  if (nodo) {
-    function(nodo->dato);
-    free(nodo);
-  }
-}
-
-void glist_swap(GNodo** nodo1, GNodo** nodo2) {
-  void* dato = (*nodo2)->dato;
-  (*nodo2)->dato = (*nodo1)->dato;
-  (*nodo1)->dato = dato;
-  GNodo* nodoAux = *nodo1;
-  *nodo1 = *nodo2;
-  *nodo2 = nodoAux;
+void glist_swap(GNodo* nodo1, GNodo* nodo2) {
+  void* dato = nodo2->dato;
+  nodo2->dato = nodo1->dato;
+  nodo1->dato = dato;
 }
 
 GList glist_selection_sort(GList lista, Compara function) {
@@ -147,13 +112,11 @@ GList glist_selection_sort(GList lista, Compara function) {
     for (; nodoAux != lista->ant; nodoAux = nodoAux->sig) {
       GNodo* nodoASwapear = nodoAux;
       GNodo* nodo = nodoAux->sig;
-      for (; nodo != lista; nodo = nodo->sig) {
-        if (function(nodo->dato, nodoASwapear->dato) == -1)
+      for (; nodo != lista; nodo = nodo->sig) 
+        if (function(nodo->dato, nodoASwapear->dato) < 0)
           nodoASwapear = nodo;
-      }
       if (nodoAux != nodoASwapear) {
-        glist_swap(&nodoAux, &nodoASwapear);
-        nodoAux = nodoASwapear;
+        glist_swap(nodoAux, nodoASwapear);
       }
     }
   }
@@ -163,10 +126,10 @@ GList glist_selection_sort(GList lista, Compara function) {
 GList glist_insertion_sort(GList lista, Compara function) {
   if (lista) {
     GNodo* nodoAux = lista->sig;
-    for (; nodoAux != lista; ) {
+    do {
       GNodo* nodo = nodoAux->ant;
       GNodo* nodoHastaSwapear = glist_crear();
-      for (; function(nodo->dato, nodoAux->dato) == 1 && nodo != lista;
+      for (; function(nodo->dato, nodoAux->dato) > 0 && nodo != lista->ant;
           nodo = nodo->ant);
       if (function(nodo->dato, nodoAux->dato) != 1) {
         nodoHastaSwapear = nodo->sig;
@@ -174,11 +137,10 @@ GList glist_insertion_sort(GList lista, Compara function) {
         nodoHastaSwapear = nodo;
       }
       GNodo* nuevaUltimaPos = nodoAux->sig;
-      for (; nodoAux != nodoHastaSwapear; ) {
-        glist_swap(&nodoAux, &nodoAux->ant);
-      }
+      for (; nodoAux != nodoHastaSwapear; nodoAux = nodoAux->ant)
+        glist_swap(nodoAux, nodoAux->ant);
       nodoAux = nuevaUltimaPos;
-    }
+    } while (nodoAux != lista);
   }
   return lista;
 }
@@ -188,7 +150,7 @@ GList glist_merge(GList lista1, GList lista2, Compara function) {
     return lista2;
   if (!lista2)
     return lista1;
-  if (function(lista1->dato, lista2->dato) == -1) {
+  if (function(lista1->dato, lista2->dato) < 0) {
     if (lista1 == lista1->sig) {
       lista1 = glist_concat(lista1, lista2);
     } else {
@@ -231,4 +193,18 @@ GList glist_merge_sort(GList lista, Compara function) {
   lista2 = glist_merge_sort(lista2, function);
 
   return glist_merge(lista, lista2, function);
+}
+
+void glist_test_sort_algorithm(char* nombreArchivo, GList lista, SortAlgorithm sort,
+  Compara functionCompare, FuncionVisitante functionVisit) {
+  GList copiaLista = glist_copy(lista);
+  clock_t t = clock();
+  copiaLista = sort(copiaLista, functionCompare);
+  t = clock() - t;
+  double tiempoSegundos = ((double)t)/CLOCKS_PER_SEC;
+  FILE* salida = fopen(nombreArchivo, "w");
+  fprintf(salida, "Tiempo: %lf\n\n", tiempoSegundos);
+  glist_imprimir_archivo(salida, copiaLista, functionVisit);
+  fclose(salida);
+  glist_destroy_copy(copiaLista);
 }
