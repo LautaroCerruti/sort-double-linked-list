@@ -29,19 +29,13 @@ GNodo* glist_pop(GList* lista, int pos);
 
 GList glist_concat(GList lista1, GList lista2);
 
-GList glist_insertar_inicio(GList lista, void* dato);
-
 GList glist_insertar_final(GList lista, void* dato);
 
-GList glist_deep_copy(GList lista);
+GList glist_copy(GList lista);
+
+void glist_destroy_copy(GList lista);
 
 void glist_imprimir_archivo(FILE* salida, GList lista, FuncionVisitante function);
-
-int glist_longitud(GList lista);
-
-void glist_insertar(GList* lista, int pos, void* dato);
-
-void glist_eliminar(GList* lista, int pos, Destruir function);
 
 void glist_swap(GNodo* nodo1, GNodo* nodo2);
 

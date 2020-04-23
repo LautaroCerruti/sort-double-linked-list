@@ -62,15 +62,6 @@ GList glist_concat(GList lista1, GList lista2) {
   return lista1;
 }
 
-GList glist_insertar_inicio(GList lista, void* dato) {
-  GNodo* nodo = malloc(sizeof(GNodo));
-  nodo->dato = dato;
-  nodo->sig = nodo;
-  nodo->ant = nodo;
-
-  return glist_concat(nodo, lista);
-}
-
 GList glist_insertar_final(GList lista, void* dato) {
   GNodo* nodo = malloc(sizeof(GNodo));
   nodo->dato = dato;
