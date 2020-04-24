@@ -5,51 +5,51 @@
 #include <time.h>
 #include <stdio.h>
 
-typedef struct _GNodo{
-  void* dato;
-  struct _GNodo *ant;
-  struct _GNodo *sig;
-} GNodo;
+typedef struct _GNode{
+  void* data;
+  struct _GNode *ant;
+  struct _GNode *sig;
+} GNode;
 
-typedef GNodo *GList;
+typedef GNode *GList;
 
-typedef int (*Compara) (void* dato1 ,void* dato2);
+typedef int (*Compare) (void* data1 ,void* data2);
 
-typedef void (*Destruir) (void* dato);
+typedef void (*Destroy) (void* data);
 
-typedef void (*FuncionVisitante) (FILE* salida, void* dato);
+typedef void (*VisitorFunction) (FILE* output, void* data);
 
-typedef GList (*SortAlgorithm) (GList lista, Compara function);
+typedef GList (*SortAlgorithm) (GList list, Compare function);
 
-GList glist_crear();
+GList glist_create();
 
-void glist_destruir(GList lista, Destruir function);
+void glist_destroy(GList list, Destroy function);
 
-GNodo* glist_pop(GList* lista, int pos);
+GNode* glist_pop(GList* list, int pos);
 
-GList glist_concat(GList lista1, GList lista2);
+GList glist_concat(GList list1, GList list2);
 
-GList glist_insertar_final(GList lista, void* dato);
+GList glist_insert_last_position(GList list, void* data);
 
-GList glist_copy(GList lista);
+GList glist_copy(GList list);
 
-void glist_destroy_copy(GList lista);
+void glist_destroy_copy(GList list);
 
-void glist_imprimir_archivo(FILE* salida, GList lista, FuncionVisitante function);
+void glist_imprimir_archivo(FILE* output, GList list, VisitorFunction function);
 
-void glist_swap(GNodo* nodo1, GNodo* nodo2);
+void glist_swap(GNode* nodo1, GNode* nodo2);
 
-GList glist_selection_sort(GList lista, Compara function);
+GList glist_selection_sort(GList list, Compare function);
 
-GList glist_insertion_sort(GList lista, Compara function);
+GList glist_insertion_sort(GList list, Compare function);
 
-GList glist_merge(GList lista1, GList lista2, Compara function);
+GList glist_merge(GList list1, GList list2, Compare function);
 
-GList glist_split(GList lista);
+GList glist_split(GList list);
 
-GList glist_merge_sort(GList lista, Compara function);
+GList glist_merge_sort(GList list, Compare function);
 
-void glist_test_sort_algorithm(char* nombreArchivo, GList lista,
-  SortAlgorithm sort, Compara functionCompare,FuncionVisitante functionVisit);
+void glist_test_sort_algorithm(char* nombreArchivo, GList list,
+  SortAlgorithm sort, Compare functionCompare,VisitorFunction functionVisit);
 
 #endif /* __GLIST_H__ */
