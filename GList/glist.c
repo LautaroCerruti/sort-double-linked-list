@@ -18,16 +18,6 @@ void glist_destroy(GList list, Destroy function) {
   free(list);
 }
 
-void glist_destroy_copy(GList list) {
-  GNode* auxNode;
-  GNode* anterior = list->ant;
-  for (; list != anterior; list = auxNode) {
-    auxNode = list->sig;
-    free(list);
-  }
-  free(list);
-}
-
 GNode* glist_pop(GList* list, int pos) {
   GNode* node = glist_crear();
   if (list) {
@@ -82,7 +72,17 @@ GList glist_copy(GList list) {
   return newList;
 }
 
-void glist_imprimir_archivo(FILE* output, GList list, VisitorFunction function) {
+void glist_destroy_copy(GList list) {
+  GNode* auxNode;
+  GNode* anterior = list->ant;
+  for (; list != anterior; list = auxNode) {
+    auxNode = list->sig;
+    free(list);
+  }
+  free(list);
+}
+
+void glist_print_file(FILE* output, GList list, VisitorFunction function) {
   if (list) {
     function(output, list->data);
     GNode* auxNode = list->sig;

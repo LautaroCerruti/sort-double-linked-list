@@ -4,7 +4,7 @@
 #include "./Persona/persona.h"
 
 int main(int argc, char *argv[]) {
-  GList lista = glist_crear();
+  GList lista = glist_create();
   Persona* persona;
   int edad;
   char bufferNombre[MAX_NOMBRE], bufferLugarNacimiento[MAX_LUGAR_NACIMIENTO];
@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
   while (fscanf(personasFile, "%[^,], %d, %[^\n]", bufferNombre, &edad, bufferLugarNacimiento) != EOF) {
     fgetc(personasFile);
     persona = persona_crear(bufferNombre, edad, bufferLugarNacimiento);
-    lista = glist_insertar_final(lista, persona);
+    lista = glist_insert_last_position(lista, persona);
   }
   fclose(personasFile);
 
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
   glist_test_sort_algorithm("merge_nombre", lista, glist_merge_sort, persona_compara_nombre, persona_imprimir_archivo);
   //glist_test_sort_algorithm("merge_lugar_nacimiento", lista, glist_merge_sort, persona_compara_lugar_nacimiento, persona_imprimir_archivo);
   
-  glist_destruir(lista, persona_destruir);
+  glist_destroy(lista, persona_destruir);
 
   return 0;
 }
