@@ -2,13 +2,14 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#define MAX_LINEA 200
+#define MAX_LINE 200
 
 /*
   Toma dos ints a y b, y devuelve un numero mayor a 0 si a es mayor a b
   0 si son iguales, y un numero menor a 0 si b es mayor a a
+  compare_int: void* void* -> int
 */
-int compara_int(const void *i, const void *j){
+int compare_int(const void *i, const void *j){
   int *a = (int *) i, *b = (int *)j;
   return *a - *b;
 }
@@ -17,10 +18,10 @@ int compara_int(const void *i, const void *j){
   swap_int Toma un array de enteros, una posicion y otra posicion e 
   intercambia de lugar el numero en la primera posicion con el de la segunda
 */
-void swap_int(int* numeros,int posicion1,int posicion2){
-  numeros[posicion1] += numeros[posicion2];
-  numeros[posicion2] = numeros[posicion1] - numeros[posicion2];
-  numeros[posicion1] -= numeros[posicion2];
+void swap_int(int* numbers,int position1,int position2){
+  numbers[position1] += numbers[position2];
+  numbers[position2] = numbers[position1] - numbers[position2];
+  numbers[position1] -= numbers[position2];
 }
 
 /*
@@ -29,87 +30,93 @@ void swap_int(int* numeros,int posicion1,int posicion2){
   Toma el numero maximo que puede generar, la cantidad de numeros randoms 
   a generar, y un puntero a un array de donde se almacenara la lista
 */
-void genera_n_randoms(int lineasArchivo, int cantidadPersonas, int* resultado){
-  int *randoms = (int*) malloc(sizeof(int)*lineasArchivo), i, aleatorio;
+void generate_n_randoms(int linesFile, int amountPeople, int* result){
+  int *randoms = (int*) malloc(sizeof(int)*linesFile), i, random;
 
-  for( i = 0;i<lineasArchivo;i++){
+  for( i = 0;i<linesFile;i++){
     randoms[i] = i;
   }
-  for(i = 0 ; i < cantidadPersonas; i++){
-    aleatorio = rand() % (lineasArchivo  - i) ;
-    resultado[i] = randoms[aleatorio];
-    swap_int(randoms, aleatorio, (lineasArchivo-i-1));
+  for(i = 0 ; i < amountPeople; i++){
+    random = rand() % (linesFile  - i) ;
+    result[i] = randoms[random];
+    swap_int(randoms, random, (linesFile-i-1));
   }
   free(randoms);                   
 }
 
 /*
   Dado un archivo cuenta la cantidad de lineas que tiene el archivo dado
-  contador_de_lineas: File -> Int
+  lines_counter: File -> Int
 */
-int contador_de_lineas(FILE* entrada){
-  char linea[1024];
-  int lineasArchivo = 0;
-  while(fgets(linea, 1024, (FILE*) entrada)) {
-    lineasArchivo++;
+int lines_counter(FILE* input){
+  char line[1024];
+  int linesFile = 0;
+  while(fgets(line, 1024, (FILE*) input)) {
+    linesFile++;
   }
-  rewind(entrada);
-  return lineasArchivo;
+  rewind(input);
+  return linesFile;
 }
 
-void creacion_de_personas (int CantidadPersonas, FILE* nombres,
-    char** locaciones, int lineasArchivoNombres, int lineasArchivoLocaciones,
-    FILE *salida) {
-  int *NumerosDePersonas = (int*) malloc(sizeof(int)*CantidadPersonas),
-    iterador, NombreBuscado = 0, iteradorArchivo = -1, locacionesPos;
-  char nombre[MAX_LINEA];
+/*
+  Toma una cantidad de personas N, un archivo con los nombres, un array 
+  bidimensional de locaciones, la cantidad de lineas del archivo de personas,
+  la cantidad de locaciones y un archivo de salida. Imprime en el archivo de 
+  salida una cantidad N de personas con el formato "nombre, edad, locacion"
+*/
+void personas_creator (int amountPeople, FILE* names,
+    char** locations, int linesFileNames, int linesFileLocations,
+    FILE *output) {
+  int *numbersOfPeople = (int*) malloc(sizeof(int)*amountPeople),
+    iterator, searchedName = 0, fileIterator = -1, locationsPos;
+  char name[MAX_LINE];
 
-  genera_n_randoms(lineasArchivoNombres, CantidadPersonas, NumerosDePersonas);
-  qsort(NumerosDePersonas, CantidadPersonas, sizeof(int), compara_int);
+  generate_n_randoms(linesFileNames, amountPeople, numbersOfPeople);
+  qsort(numbersOfPeople, amountPeople, sizeof(int), compare_int);
 
-  for(iterador = 0; iterador < CantidadPersonas; ++iterador){
-    NombreBuscado = NumerosDePersonas[iterador];
-    for(; iteradorArchivo != NombreBuscado; iteradorArchivo++){
-      fscanf(nombres, "%[^\n]", nombre);
-      fgetc(nombres);
+  for(iterator = 0; iterator < amountPeople; ++iterator){
+    searchedName = numbersOfPeople[iterator];
+    for(; fileIterator != searchedName; fileIterator++){
+      fscanf(names, "%[^\n]", name);
+      fgetc(names);
     }
-    locacionesPos = rand() % lineasArchivoLocaciones;
-    fprintf(salida, "%s, %d, %s\n", nombre, (rand()%100+1), locaciones[locacionesPos]);
+    locationsPos = rand() % linesFileLocations;
+    fprintf(output, "%s, %d, %s\n", name, (rand()%100+1), locations[locationsPos]);
   }
-  free(NumerosDePersonas);
+  free(numbersOfPeople);
 }
 
 int main(int argc, char *argv[]) {
   srand(time(NULL));
-  int cantidadAGenerar, cantidadNombresDisponible, 
-    cantidadLocacionesDisponibles, iterador;
-  char **locaciones, buffer[MAX_LINEA];
-  FILE *nombres, *locacionesarchivo, *salida;
-  cantidadAGenerar = atoi(argv[1]);
-  nombres = fopen(argv[2], "r");
-  cantidadNombresDisponible = contador_de_lineas(nombres);
-  if (cantidadAGenerar > cantidadNombresDisponible) {
+  int generationAmount, availableNamesAmount, 
+    availableLocationsAmount, iterator;
+  char **locations, buffer[MAX_LINE];
+  FILE *names, *locationsFile, *output;
+  generationAmount = atoi(argv[1]);
+  names = fopen(argv[2], "r");
+  availableNamesAmount = lines_counter(names);
+  if (generationAmount > availableNamesAmount) {
     printf("Fallo la generacion debido a falta de nombres disponibles\n");
   } else {
-    locacionesarchivo = fopen(argv[3],"r");
-    cantidadLocacionesDisponibles = contador_de_lineas(locacionesarchivo);
-    locaciones = (char** ) malloc(sizeof(char*)*cantidadLocacionesDisponibles);
-    for(iterador = 0; iterador < cantidadLocacionesDisponibles; ++iterador){
-      fscanf(locacionesarchivo,"%[^\n]", buffer);
-      fgetc(locacionesarchivo);
-      locaciones[iterador] = (char*) malloc(sizeof(char)*(strlen(buffer)+1));
-      strcpy(locaciones[iterador], buffer);
+    locationsFile = fopen(argv[3],"r");
+    availableLocationsAmount = lines_counter(locationsFile);
+    locations = (char** ) malloc(sizeof(char*)*availableLocationsAmount);
+    for(iterator = 0; iterator < availableLocationsAmount; ++iterator){
+      fscanf(locationsFile,"%[^\n]", buffer);
+      fgetc(locationsFile);
+      locations[iterator] = (char*) malloc(sizeof(char)*(strlen(buffer)+1));
+      strcpy(locations[iterator], buffer);
     }
-    fclose(locacionesarchivo);
-    salida = fopen(argv[4], "w");
-    creacion_de_personas(cantidadAGenerar, nombres, locaciones, 
-      cantidadNombresDisponible, cantidadLocacionesDisponibles, salida);
-    fclose(nombres);
-    fclose(salida);
-    for(iterador = 0; iterador < cantidadLocacionesDisponibles; ++iterador){
-      free(locaciones[iterador]);
+    fclose(locationsFile);
+    output = fopen(argv[4], "w");
+    personas_creator(generationAmount, names, locations, 
+      availableNamesAmount, availableLocationsAmount, output);
+    fclose(names);
+    fclose(output);
+    for(iterator = 0; iterator < availableLocationsAmount; ++iterator){
+      free(locations[iterator]);
     }
-    free(locaciones);
+    free(locations);
   }
   return 0;
 }
