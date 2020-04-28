@@ -7,8 +7,8 @@
 
 typedef struct _GNode{
   void* data;
-  struct _GNode *ant;
-  struct _GNode *sig;
+  struct _GNode *prev;
+  struct _GNode *next;
 } GNode;
 
 typedef GNode *GList;
