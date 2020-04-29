@@ -25,23 +25,18 @@ void swap_int(int* numbers,int position1,int position2){
 }
 
 /*
-  Genera una lista de n numeros randoms no repetidos, siendo n un numero que se
+  Genera una lista de n numeros randoms, siendo n un numero que se
   ingreso como parametro de la funcion 
   Toma el numero maximo que puede generar, la cantidad de numeros randoms 
   a generar, y un puntero a un array de donde se almacenara la lista
 */
-void generate_n_randoms(int linesFile, int amountPeople, int* result){
-  int *randoms = (int*) malloc(sizeof(int)*linesFile), i, random;
-
-  for( i = 0;i<linesFile;i++){
-    randoms[i] = i;
+int* generate_n_randoms(int maxNumber, int n){
+  int  i = 0, random, *result = (int*) malloc(sizeof(int)*n);
+  for(; i < n; i++){
+    random = rand() % maxNumber;
+    result[i] = random;
   }
-  for(i = 0 ; i < amountPeople; i++){
-    random = rand() % (linesFile  - i) ;
-    result[i] = randoms[random];
-    swap_int(randoms, random, (linesFile-i-1));
-  }
-  free(randoms);                   
+  return result;
 }
 
 /*
@@ -67,21 +62,19 @@ int lines_counter(FILE* input){
 void personas_creator (int amountPeople, FILE* names,
     char** locations, int linesFileNames, int linesFileLocations,
     FILE *output) {
-  int *numbersOfPeople = (int*) malloc(sizeof(int)*amountPeople),
-    iterator, searchedName = 0, fileIterator = -1, locationsPos;
+  int *numbersOfPeople, iterator, searchedNumber = 0, fileIterator = -1;
   char name[MAX_LINE];
 
-  generate_n_randoms(linesFileNames, amountPeople, numbersOfPeople);
+  numbersOfPeople = generate_n_randoms(linesFileNames, amountPeople);
   qsort(numbersOfPeople, amountPeople, sizeof(int), compare_int);
 
   for(iterator = 0; iterator < amountPeople; ++iterator){
-    searchedName = numbersOfPeople[iterator];
-    for(; fileIterator != searchedName; fileIterator++){
+    searchedNumber = numbersOfPeople[iterator];
+    for(; fileIterator != searchedNumber; fileIterator++){
       fscanf(names, "%[^\n]", name);
       fgetc(names);
     }
-    locationsPos = rand() % linesFileLocations;
-    fprintf(output, "%s, %d, %s\n", name, (rand()%100+1), locations[locationsPos]);
+    fprintf(output, "%s, %d, %s\n", name, (rand()%100+1), locations[rand() % linesFileLocations]);
   }
   free(numbersOfPeople);
 }
