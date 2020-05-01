@@ -1,0 +1,206 @@
+\documentclass[]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+	framexleftmargin=5mm, frame=shadowbox, rulesepcolor=\color{gray}
+}
+
+\lstset{style=mystyle}
+%opening
+\begin{document}
+	
+\title{TP Ordenamiento Lista Circular Doblemente Enlazada}
+\author{Cassinerio Marcos - Cerruti Lautaro}
+\date{Abril 29, 2020\footnote{Updated \today}}
+\maketitle
+\newpage
+
+\section{Introducción}
+El objetivo de este trabajo fue implementar los algoritmos de ordenamiento \href{https://en.wikipedia.org/wiki/Selection_sort}{\textbf{Selection Sort}}, \href{https://en.wikipedia.org/wiki/Insertion_sort}{\textbf{Insertion Sort}} y \href{https://en.wikipedia.org/wiki/Merge_sort}{\textbf{Merge Sort}} sobre un tipo de lista a elección, en este caso utilizamos una \href{https://en.wikipedia.org/wiki/Doubly_linked_list#Circular_doubly_linked_lists}{\textbf{Lista Circular Doblemente Enlazada}}. 
+
+Para la prueba de la implementación utilizamos una estructura de personas, lo que conllevó a realizar un generador de las mismas.
+
+\section{Compilado y ejecucion}
+Para compilar el proyecto abrimos una terminal, y una vez ubicados en el directorio del proyecto, ejecutamos el comando \verb|make|. Esto nos generará los ejecutables del generador de datos de prueba y del programa que ejecuta los algoritmos de ordenamiento.\\\\
+Para generar los datos de prueba ejecutamos el comando:
+
+\verb|./generador cantidadPersonas archivoNombres archivoLugaresDeNacimiento|\\
+\verb|archivoPruebas|
+\\
+\\
+Para ejecutar el segundo programa corremos el comando:
+
+\verb|./main archivoPruebas|
+\\\\Este programa generará 6 archivos que tendrán de nombre el algoritmo utilizado y el dato por el que se lo ordenó de la forma \verb|algoritmo_dato|. Estos archivos contienen una linea con el tiempo que se tardó en hacer el ordenado, y luego la anterior lista de personas generada, la cual fue ordenada por el campo que se le pasó, con el algoritmo utilizado. 
+\section{Organizacion de los archivos}
+Para la primera parte del trabajo, el generador de casos de prueba, no hicimos ninguna división.\\
+Para la segunda parte, implementamos por un lado toda la lista (llamada GList) en los archivos glist.c y glist.h. Luego todo lo relacionado a persona, en los archivos persona.c y persona.h. Y por último el main del segundo programa es el archivo main.c el cual utiliza las dependecias glist y persona.
+\newpage
+\section{Implementaciones y estructuras}
+\subsection{Generador Datos de Prueba}
+
+En el generador de personas, lo que se realiza es leer de los archivos que se les pasa como parámetros, los nombres de las personas y las localidades. 
+Luego se imprimen la cantidad de personas pasada como parametro, generadas aleatoriamente, con el formato:
+
+\verb|nombre, edad, lugarDeNacimiento|.
+
+\subsection{Programa Ordenamiento}
+\subsubsection{GList}
+
+En este programa utilizamos una lista circular doblemente enlazada, con la siguiente definición:
+
+\begin{lstlisting}[language=C]
+typedef struct _GNode{
+  void* data;
+  struct _GNode *prev;
+  struct _GNode *next;
+} GNode;
+
+typedef GNode *GList;
+\end{lstlisting}
+
+Luego de generar esta estructura en la cabecera, declaramos las funciones de la GList y los 3 métodos de ordenamiento sobre esta estructura. Y una función que se encarga de aplicarlos y guarda los resultados. En definitiva, esta función prueba los distintos ordenamientos, y es la que se utiliza en el main.
+Las funciones mencionadas son:
+
+\verb|glist_create|
+
+\verb|glist_destroy|
+
+\verb|glist_pop|
+
+\verb|glist_concat|
+
+\verb|glist_insert_last_position|
+
+\verb|glist_copy|
+
+\verb|glist_destroy_copy|
+
+\verb|glist_print_file|
+
+\verb|glist_swap|
+
+\verb|glist_selection_sort|
+
+\verb|glist_insertion_sort|
+
+\verb|glist_merge|
+
+\verb|glist_split|
+
+\verb|glist_merge_sort|
+
+\verb|glist_test_sort_algorithm|\\\\
+Todas estas funciones declaradas se implementan en glist.c.
+\subsubsection{Persona}
+Este programa trabaja con personas, dadas por la siguiente estructura:
+\begin{lstlisting}[language=C]
+typedef struct {
+  char *nombre;
+  int edad;
+  char *lugarDeNacimiento; // pais o capital
+} Persona;
+\end{lstlisting}
+Esta estructura la creamos en la cabecera junto a sus funciones básicas.
+Las funciones mencionadas son:
+
+\verb|persona_crear|
+
+\verb|persona_destruir|
+
+\verb|persona_compara_edad|
+
+\verb|persona_compara_nombre|
+
+\verb|persona_compara_lugar_nacimiento|
+
+\verb|persona_imprimir_archivo|\\\\
+Luego en persona.c implementamos todas sus funciones.
+\subsubsection{Main}
+El main se encarga de leer las lineas del archivo obtenido despues de correr el generador de los datos de prueba, crea personas a partir de las mismas y las inserta en una GList.
+Luego ejecuta las pruebas de los ordenamientos en esta lista. Las pruebas realizadas son los tres algoritmos de ordenamiento por edad y los mismos tres por lugar de nacimiento. Finalmente destruye la lista generada.
+\section{Desarrollo}
+Para el desarrollo, en una primera instancia hicimos una división del trabajo. Mientras que uno hacia el generador de personas, el otro implementaba las funciones básicas de GList.
+
+Luego de que cada uno terinara su parte, juntos procedimos haciendo los algoritmos de ordenamiento.
+Para el selection sort y el insertion sort nos basamos principalmente en un gráfico que mostraba como funcionaban estos algoritmos.
+
+Para el merge sort también nos basamos en un gráfico, pero adicionalmente utilizamos una implementacion hecha sobre una lista doblemente enlazada no circular.
+Habiendo terminando toda la parte de GList, continuamos con la parte de personas, la cual no trajo complicaciones.
+
+Luego realizamos la función que probaba los algoritmos, y nos dimos cuenta que no podiamos ordenar sobre la lista ya existente ya que seria distinta al probar los otros algoritmos. Esto hizo que tuvieramos que desarrollar una función que realizara una copia de la lista y otra para destruir esta copia.
+
+Reviendo los algoritmos nos dimos cuenta que el insertion sort no aprovecha las ventajas que proporciona nuestro tipo de lista. Por lo que decidimos refactorizar la implentación del algoritmo.
+
+Una vez dado por finalizado esto hicimos el \verb|Makefile|.
+\newpage
+\section{Resultados Pruebas}
+\subsection{Primer Caso de Prueba}
+Esta primer prueba la realizamos con 5000 personas.\\
+Resultados:
+
+\subsubsection{Edad}
+\verb|Selection Sort: 0.111 segundos|\\
+\verb|Insertion Sort: 0.071 segundos|\\
+\verb|Merge Sort: 0.003 segundos|\\
+\subsubsection{Lugar de Nacimiento}
+\verb|Selection Sort: 0.228 segundos|\\
+\verb|Insertion Sort: 0.131 segundos|\\
+\verb|Merge Sort: 0.004 segundos|\\
+\subsection{Segundo Caso de Prueba}
+Esta segunda prueba la realizamos con 15000 personas.\\
+Resultados:
+
+\subsubsection{Edad}
+\verb|Selection Sort: 1.078 segundos|\\
+\verb|Insertion Sort: 0.764 segundos|\\
+\verb|Merge Sort: 0.011 segundos|\\
+\subsubsection{Lugar de Nacimiento}
+\verb|Selection Sort: 2.499 segundos|\\
+\verb|Insertion Sort: 1.413 segundos|\\
+\verb|Merge Sort: 0.015 segundos|\\
+
+\subsection{Tercer Caso de Prueba}
+Esta última prueba la realizamos con 30000 personas.\\
+Resultados:
+
+\subsubsection{Edad}
+\verb|Selection Sort: 6.949 segundos|\\
+\verb|Insertion Sort: 4.716 segundos|\\
+\verb|Merge Sort: 0.026 segundos|\\
+\subsubsection{Lugar de Nacimiento}
+\verb|Selection Sort: 14.598 segundos|\\
+\verb|Insertion Sort: 8.461 segundos|\\
+\verb|Merge Sort: 0.033 segundos|\\
+\section{Bibliografia}
+\url{https://en.wikipedia.org/wiki/Selection_sort}\\
+\url{https://en.wikipedia.org/wiki/Insertion_sort}\\
+\url{https://en.wikipedia.org/wiki/Merge_sort}\\
+\url{https://www.geeksforgeeks.org/merge-sort-for-doubly-linked-list/}\\
+\url{https://www.geeksforgeeks.org/how-to-measure-time-taken-by-a-program-in-c/}\\
+\end{document}
