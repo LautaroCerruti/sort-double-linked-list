@@ -14,16 +14,16 @@ typedef struct {
 } Persona;
 
 /*
-  Dada una persona, la destruye liberando la memoria
-*/
-void persona_destruir(void* dato);
-
-/*
   Dado un nombre, una edad y un lugarDeNacimiento, crea una persona
   y devuelve un puntero que apunta a esta
   persona_crear: char* int char* -> Persona*
 */
 Persona* persona_crear(char* nombre, int edad, char* lugarDeNacimiento);
+
+/*
+  Dada una persona, la destruye liberando la memoria
+*/
+void persona_destruir(void* dato);
 
 /*
   Dadas dos personas las compara por edad y devuelve 0 si son iguales,

@@ -2,13 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void persona_destruir(void* dato) {
-  Persona* persona = (Persona*) dato;
-  free(persona->nombre);
-  free(persona->lugarDeNacimiento);
-  free(persona);
-}
-
 Persona* persona_crear(char* nombre, int edad, char* lugarDeNacimiento) {
   Persona* persona = (Persona*) malloc(sizeof(Persona));
   persona->nombre = (char*) malloc(sizeof(char)*(strlen(nombre)+1));
@@ -17,6 +10,13 @@ Persona* persona_crear(char* nombre, int edad, char* lugarDeNacimiento) {
   persona->lugarDeNacimiento = (char*) malloc(sizeof(char)*(strlen(lugarDeNacimiento)+1));
   strcpy(persona->lugarDeNacimiento, lugarDeNacimiento);
   return persona;
+}
+
+void persona_destruir(void* dato) {
+  Persona* persona = (Persona*) dato;
+  free(persona->nombre);
+  free(persona->lugarDeNacimiento);
+  free(persona);
 }
 
 int persona_compara_edad(void* dato1, void* dato2) {
