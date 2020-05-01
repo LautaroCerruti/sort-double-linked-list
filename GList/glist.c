@@ -198,9 +198,9 @@ void glist_test_sort_algorithm(char* nombreArchivo, GList list, SortAlgorithm so
   clock_t t = clock();
   copyList = sort(copyList, functionCompare);
   t = clock() - t;
-  double tiempoSegundos = ((double)t)/CLOCKS_PER_SEC;
+  double seconds = ((double)t)/CLOCKS_PER_SEC;
   FILE* output = fopen(nombreArchivo, "w");
-  fprintf(output, "Tiempo: %lf\n\n", tiempoSegundos);
+  fprintf(output, "Tiempo: %lf\n\n", seconds);
   glist_print_file(output, copyList, functionVisit);
   fclose(output);
   glist_destroy_copy(copyList);
