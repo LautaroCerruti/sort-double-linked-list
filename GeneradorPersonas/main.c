@@ -34,7 +34,7 @@ int *generate_n_randoms(int maxNumber, int n) {
   Dado un archivo cuenta la cantidad de lineas que tiene el archivo dado
   lines_counter: File -> Int
 */
-int lines_counter(FILE * input) {
+int lines_counter(FILE *input) {
   char line[1024];
   int linesFile = 0;
   while (fgets(line, 1024, (FILE *) input)) {
@@ -50,9 +50,9 @@ int lines_counter(FILE * input) {
   la cantidad de locaciones y un archivo de salida. Imprime en el archivo de
   salida una cantidad N de personas con el formato "nombre, edad, locacion"
 */
-void personas_creator(int amountPeople, FILE * names,
+void personas_creator(int amountPeople, FILE *names,
                       char **locations, int linesFileNames,
-                      int linesFileLocations, FILE * output) {
+                      int linesFileLocations, FILE *output) {
   int *numbersOfPeople, iterator, searchedNumber = 0, fileIterator = -1;
   char name[MAX_LINE];
 
@@ -71,7 +71,7 @@ void personas_creator(int amountPeople, FILE * names,
   free(numbersOfPeople);
 }
 
-char **read_locations(int availableLocationsAmount, FILE * locationsFile) {
+char **read_locations(int availableLocationsAmount, FILE *locationsFile) {
   int iterator;
   char buffer[MAX_LINE];
   char **locations =

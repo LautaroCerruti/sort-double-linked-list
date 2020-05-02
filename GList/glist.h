@@ -13,7 +13,7 @@ typedef int (*Compare) (void *data1, void *data2);
 
 typedef void (*Destroy) (void *data);
 
-typedef void (*VisitorFunction) (FILE * output, void *data);
+typedef void (*VisitorFunction) (FILE *output, void *data);
 
 typedef GList(*SortAlgorithm) (GList list, Compare function);
 
@@ -31,7 +31,7 @@ void glist_destroy(GList list, Destroy function);
   Toma una lista y una posicion y saca el nodo en dicha posicion
   de la lista y lo devuelve.
 */
-GNode *glist_pop(GList * list, int pos);
+GNode *glist_pop(GList *list, int pos);
 /*
   Toma 2 listas y devuelve su union.
 */
@@ -60,12 +60,12 @@ void glist_destroy_copy(GList list);
   Toma un archivo, una lista y una funcion. Utilizando dicha funcion,
   imprime los datos de la lista en las lineas del archivo.
 */
-void glist_print_file(FILE * output, GList list, VisitorFunction function);
+void glist_print_file(FILE *output, GList list, VisitorFunction function);
 
 /*
   Toma 2 nodos e intercambia sus datos;
 */
-void glist_swap(GNode * nodo1, GNode * nodo2);
+void glist_swap(GNode *nodo1, GNode *nodo2);
 
 /*
   Toma una lista y una funcion de comparacion, y utiliza el algoritmo

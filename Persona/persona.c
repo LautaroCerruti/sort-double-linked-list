@@ -38,7 +38,7 @@ int persona_compara_largo_nombre(void *dato1, void *dato2) {
   return strlen(persona1->nombre) - strlen(persona2->nombre);
 }
 
-void persona_imprimir_archivo(FILE * archivo, void *dato) {
+void persona_imprimir_archivo(FILE *archivo, void *dato) {
   Persona *persona = (Persona *) dato;
   fprintf(archivo, "%s, %d, %s\n", persona->nombre, persona->edad,
           persona->lugarDeNacimiento);

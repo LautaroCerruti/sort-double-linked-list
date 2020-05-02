@@ -24,7 +24,7 @@ void glist_destroy(GList list, Destroy function) {
   free(list);
 }
 
-GNode *glist_pop(GList * list, int pos) {
+GNode *glist_pop(GList *list, int pos) {
   GNode *node = glist_create();
   if (list) {
     if ((*list)->next == *list) {
@@ -88,7 +88,7 @@ void glist_destroy_copy(GList list) {
   free(list);
 }
 
-void glist_print_file(FILE * output, GList list, VisitorFunction function) {
+void glist_print_file(FILE *output, GList list, VisitorFunction function) {
   if (list) {
     function(output, list->data);
     GNode *auxNode = list->next;
@@ -97,7 +97,7 @@ void glist_print_file(FILE * output, GList list, VisitorFunction function) {
   }
 }
 
-void glist_swap(GNode * node1, GNode * node2) {
+void glist_swap(GNode *node1, GNode *node2) {
   void *data = node2->data;
   node2->data = node1->data;
   node1->data = data;

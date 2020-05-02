@@ -41,6 +41,6 @@ int persona_compara_largo_nombre(void *dato1, void *dato2);
   Dado un archivo y una persona, imprime en el archivo la persona,
   con el formato "nombre, edad, lugarDeNacimiento"
 */
-void persona_imprimir_archivo(FILE * archivo, void *dato);
+void persona_imprimir_archivo(FILE *archivo, void *dato);
 
 #endif                          /* __PERSONA_H__ */
