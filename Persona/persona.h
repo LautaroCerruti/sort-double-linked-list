@@ -14,12 +14,12 @@ typedef struct Persona_ Persona;
   y devuelve un puntero que apunta a esta
   persona_crear: char* int char* -> Persona*
 */
-Persona* persona_crear(char* nombre, int edad, char* lugarDeNacimiento);
+Persona *persona_crear(char *nombre, int edad, char *lugarDeNacimiento);
 
 /*
   Dada una persona, la destruye liberando la memoria
 */
-void persona_destruir(void* dato);
+void persona_destruir(void *dato);
 
 /*
   Dadas dos personas las compara por edad y devuelve 0 si son iguales,
@@ -27,7 +27,7 @@ void persona_destruir(void* dato);
   mayor a 0 si la de la primera es mayor a la de la segunda
   persona_compara_edad: void* void* -> int
 */
-int persona_compara_edad(void* dato1, void* dato2);
+int persona_compara_edad(void *dato1, void *dato2);
 
 /*
   Dadas dos personas las compara por el largo de su nombre y devuelve 0 si son
@@ -35,12 +35,12 @@ int persona_compara_edad(void* dato1, void* dato2);
   primera y mayor a 0 si el de la primera es mas largo que el de la segunda.
   persona_compara_nombre: void* void* -> int
 */
-int persona_compara_largo_nombre(void* dato1, void* dato2);
+int persona_compara_largo_nombre(void *dato1, void *dato2);
 
 /*
   Dado un archivo y una persona, imprime en el archivo la persona,
   con el formato "nombre, edad, lugarDeNacimiento"
 */
-void persona_imprimir_archivo(FILE* archivo, void* dato);
+void persona_imprimir_archivo(FILE * archivo, void *dato);
 
-#endif /* __PERSONA_H__ */
+#endif                          /* __PERSONA_H__ */

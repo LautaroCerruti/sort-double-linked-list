@@ -9,13 +9,13 @@ typedef struct _GNode GNode;
 
 typedef GNode *GList;
 
-typedef int (*Compare) (void* data1 ,void* data2);
+typedef int (*Compare) (void *data1, void *data2);
 
-typedef void (*Destroy) (void* data);
+typedef void (*Destroy) (void *data);
 
-typedef void (*VisitorFunction) (FILE* output, void* data);
+typedef void (*VisitorFunction) (FILE * output, void *data);
 
-typedef GList (*SortAlgorithm) (GList list, Compare function);
+typedef GList(*SortAlgorithm) (GList list, Compare function);
 
 /*
   Crea una GList y le da valor NULL
@@ -31,7 +31,7 @@ void glist_destroy(GList list, Destroy function);
   Toma una lista y una posicion y saca el nodo en dicha posicion
   de la lista y lo devuelve.
 */
-GNode* glist_pop(GList* list, int pos);
+GNode *glist_pop(GList * list, int pos);
 /*
   Toma 2 listas y devuelve su union.
 */
@@ -41,7 +41,7 @@ GList glist_concat(GList list1, GList list2);
   Toma una lista y un dato, inserta el dato en la ultima posicion
   de la lista y la devuelve.
 */
-GList glist_insert_last_position(GList list, void* data);
+GList glist_insert_last_position(GList list, void *data);
 
 /*
   Toma una lista y devuelve una nueva con los mismos datos de la
@@ -60,12 +60,12 @@ void glist_destroy_copy(GList list);
   Toma un archivo, una lista y una funcion. Utilizando dicha funcion,
   imprime los datos de la lista en las lineas del archivo.
 */
-void glist_print_file(FILE* output, GList list, VisitorFunction function);
+void glist_print_file(FILE * output, GList list, VisitorFunction function);
 
 /*
   Toma 2 nodos e intercambia sus datos;
 */
-void glist_swap(GNode* nodo1, GNode* nodo2);
+void glist_swap(GNode * nodo1, GNode * nodo2);
 
 /*
   Toma una lista y una funcion de comparacion, y utiliza el algoritmo
@@ -110,7 +110,8 @@ GList glist_merge_sort(GList list, Compare function);
   linea del archivo los datos de la nueva lista y finalmente elimina la
   copia de la lista.
 */
-void glist_test_sort_algorithm(char* nombreArchivo, GList list,
-  SortAlgorithm sort, Compare functionCompare, VisitorFunction functionVisit);
+void glist_test_sort_algorithm(char *nombreArchivo, GList list,
+                               SortAlgorithm sort, Compare functionCompare,
+                               VisitorFunction functionVisit);
 
-#endif /* __GLIST_H__ */
+#endif                          /* __GLIST_H__ */
