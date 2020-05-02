@@ -30,22 +30,12 @@ void persona_destruir(void* dato);
 int persona_compara_edad(void* dato1, void* dato2);
 
 /*
-  Dadas dos personas las compara por nombre y devuelve 0 si son iguales,
-  menor a 0 si el nombre de la segunda es posterior alfabeticamente que el de
-  la primera y mayor a 0 si el de la primera es posterior alfabeticamente que
-  el de la segunda.
+  Dadas dos personas las compara por el largo de su nombre y devuelve 0 si son
+  iguales, menor a 0 si el nombre de la segunda es mas largo que el de la 
+  primera y mayor a 0 si el de la primera es mas largo que el de la segunda.
   persona_compara_nombre: void* void* -> int
 */
-int persona_compara_nombre(void* dato1, void* dato2);
-
-/*
-  Dadas dos personas las compara por lugarDeNacimiento y devuelve 0 si son 
-  iguales, menor a 0 si el lugarDeNacimiento de la segunda es posterior 
-  alfabeticamente que el de la primera y mayor a 0 si el de la primera es
-  posterior alfabeticamente que el de la segunda.
-  persona_compara_nombre: void* void* -> int
-*/
-int persona_compara_lugar_nacimiento(void* dato1, void* dato2);
+int persona_compara_largo_nombre(void* dato1, void* dato2);
 
 /*
   Dado un archivo y una persona, imprime en el archivo la persona,

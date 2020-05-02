@@ -6,12 +6,10 @@ typedef struct _GNode{
   void* data;
   struct _GNode *prev;
   struct _GNode *next;
-} GNode;
-
-typedef GNode *GList;
+};
 
 GList glist_create() {
-    return NULL;
+  return NULL;
 }
 
 void glist_destroy(GList list, Destroy function) {

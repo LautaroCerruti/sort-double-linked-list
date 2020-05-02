@@ -8,8 +8,6 @@ typedef struct Persona_{
   char *lugarDeNacimiento; // pais o capital
 };
 
-typedef struct Persona_ Persona;
-
 Persona* persona_crear(char* nombre, int edad, char* lugarDeNacimiento) {
   Persona* persona = (Persona*) malloc(sizeof(Persona));
   persona->nombre = (char*) malloc(sizeof(char)*(strlen(nombre)+1));
@@ -33,16 +31,10 @@ int persona_compara_edad(void* dato1, void* dato2) {
   return persona1->edad - persona2->edad;
 }
 
-int persona_compara_nombre(void* dato1, void* dato2) {
+int persona_compara_largo_nombre(void* dato1, void* dato2) {
   Persona* persona1 = (Persona*) dato1;
   Persona* persona2 = (Persona*) dato2;
-  return strcmp(persona1->nombre, persona2->nombre);
-}
-
-int persona_compara_lugar_nacimiento(void* dato1, void* dato2) {
-  Persona* persona1 = (Persona*) dato1;
-  Persona* persona2 = (Persona*) dato2;
-  return strcmp(persona1->lugarDeNacimiento, persona2->lugarDeNacimiento);
+  return strlen(persona1->nombre) - strlen(persona2->nombre);
 }
 
 void persona_imprimir_archivo(FILE* archivo, void* dato) {
