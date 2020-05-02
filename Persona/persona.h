@@ -7,11 +7,7 @@
 #define MAX_NOMBRE 100
 #define MAX_LUGAR_NACIMIENTO 50
 
-typedef struct {
-  char *nombre;
-  int edad;
-  char *lugarDeNacimiento; // pais o capital
-} Persona;
+typedef struct Persona_ Persona;
 
 /*
   Dado un nombre, una edad y un lugarDeNacimiento, crea una persona

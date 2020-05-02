@@ -5,12 +5,6 @@
 #include <time.h>
 #include <stdio.h>
 
-typedef struct _GNode{
-  void* data;
-  struct _GNode *prev;
-  struct _GNode *next;
-} GNode;
-
 typedef GNode *GList;
 
 typedef int (*Compare) (void* data1 ,void* data2);

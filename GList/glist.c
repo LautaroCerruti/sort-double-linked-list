@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct _GNode{
+  void* data;
+  struct _GNode *prev;
+  struct _GNode *next;
+} GNode;
+
+typedef GNode *GList;
+
 GList glist_create() {
     return NULL;
 }

@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct Persona_{
+  char *nombre;
+  int edad;
+  char *lugarDeNacimiento; // pais o capital
+};
+
+typedef struct Persona_ Persona;
+
 Persona* persona_crear(char* nombre, int edad, char* lugarDeNacimiento) {
   Persona* persona = (Persona*) malloc(sizeof(Persona));
   persona->nombre = (char*) malloc(sizeof(char)*(strlen(nombre)+1));
